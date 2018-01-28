@@ -1,0 +1,4 @@
+boot/*.o
+boot/*.bin
+*.o
+*.bin

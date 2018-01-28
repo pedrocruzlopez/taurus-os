@@ -1,4 +1,9 @@
 boot/*.o
 boot/*.bin
+boot/iso/
+boot/*.iso
+boot/*.img
 *.o
 *.bin
+*.iso
+*.img

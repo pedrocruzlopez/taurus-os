@@ -3,18 +3,36 @@
 .text
 	.global _start
 
+
 _start:
 
 	xorw %ax, %ax
 	movw %ax, %ds
 	movw %ax, %ss
 
+	movw $0x2000, %sp
+	movw %sp, %bp
 
-	movw $msg, %si
-	jmp print_char
+	pushw $msg
+	call print_msg
 
-print_char:
+
+
 	
+	
+msg: 
+	.asciz "Welcome to Taurus OS \n\r"
+    .byte 0
+
+booting_msg:
+	.asciz "Booting... \n\r"
+	.byte 0
+
+print_msg:
+	pushw %bp 
+	movw %sp, %bp;
+	movw 4(%bp), %si  
+
 	movb $0x0e, %ah
 	movb $0, %bh
 	movb $4, %bl
@@ -22,21 +40,17 @@ print_char:
 loop:
 	
 	cmpw $0, (%si)
-	je halt_cpu
+	je end_print
 
 	lodsb
 	int $0x10
 
 	jmp loop
 
-halt_cpu:
-
-	nop
-	
- 
-	
-msg: 
-	.asciz "Welcome to TAURUS OS"
+end_print:
+	movw %bp, %sp
+	popw %bp
+ret	
 
 
 signature:

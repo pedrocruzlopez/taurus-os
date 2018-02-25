@@ -3,6 +3,7 @@
 #define halt_cpu() cli; hlt 
 
 #define BOOT_STACK 0x2000
+#define SETUP_BUFFER_SEG 0x1000
 
 .code16
 
@@ -38,6 +39,22 @@ without_extentions:
 
 read_sectors:
 	print(reading_msg)
+
+	movw $disk_address_packet_structure, %si
+	movb $0x80, %dl
+	movb $0x42, %ah
+	int $0x13
+	jc error_reading_sectors
+	
+kernel_setup_jmp:
+	jmp setup_jmp
+
+error_reading_sectors:
+	print(reading_err)
+	halt_cpu()
+
+setup_jmp:
+	print(setup_jump_msg)
 	
 msg: 
 	.asciz "Welcome to Taurus OS \n\r"
@@ -55,14 +72,27 @@ extentions_msg:
 reading_msg:
 	.asciz "Reading sectors...\n\r"
 	.byte 0
+reading_err:
+	.asciz "Error reading sectors \n\r"	
+	.byte 0
+setup_jump_msg:
+	.asciz "Jumping to setup code \n\r"
+	.byte 0
 
 disk_address_packet_structure:
+dap_size:
 	.byte 0x10 //Size of DAP
+unused:
 	.byte 0x0  //Must be zero
-	.byte 0x0  //Last byte of number of sector to read (remember that x86 is little endian)
-	.byte 0x1  //First byte of number of sectors to read
-
-
+number_sectors:
+	.byte 1  //First byte of number of sector to read (remember that x86 is little endian)
+	.byte 0  //Last byte of number of sectors to read
+buffer_address:
+	.word 0x0
+	.word SETUP_BUFFER_SEG //adress of buffer
+sector_to_read:
+	.quad 1  //sector of disk 
+    
 
 
 print_msg:

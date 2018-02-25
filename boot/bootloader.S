@@ -1,4 +1,9 @@
 #define print(x) pushw $x; call print_msg
+
+#define halt_cpu() cli; hlt 
+
+#define BOOT_STACK 0x2000
+
 .code16
 
 .text
@@ -11,7 +16,7 @@ _start:
 	movw %ax, %ds
 	movw %ax, %ss
 
-	movw $0x2000, %sp
+	movw $BOOT_STACK, %sp
 	movw %sp, %bp
 
 	print(msg)
@@ -29,8 +34,7 @@ with_extentions:
 
 without_extentions:
 	print(no_extentions_msg)
-	cli
-	hlt
+	halt_cpu()
 
 read_sectors:
 	print(reading_msg)

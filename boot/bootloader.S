@@ -16,9 +16,27 @@ _start:
 	pushw $msg
 	call print_msg
 
-
-
 	
+	movb $0x41, %ah
+	movw $0x55aa, %bx
+	movb $0x80, %dl
+	int $0x13
+	jc without_extentions
+
+with_extentions:  
+	pushw $extentions_msg
+	call print_msg
+	jmp read_sectors
+
+without_extentions:
+	pushw $no_extentions_msg
+	call print_msg
+	cli
+	hlt
+
+read_sectors:
+	pushw $reading_msg
+	call print_msg
 	
 msg: 
 	.asciz "Welcome to Taurus OS \n\r"
@@ -26,6 +44,15 @@ msg:
 
 booting_msg:
 	.asciz "Booting... \n\r"
+	.byte 0
+no_extentions_msg:
+	.asciz "No extentions installed \n\r"
+	.byte 0
+extentions_msg:
+	.asciz "Extentions installed \n\r"
+	.byte 0
+reading_msg:
+	.asciz "Reading sectors...\n\r"
 	.byte 0
 
 print_msg:

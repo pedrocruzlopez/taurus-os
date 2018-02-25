@@ -1,3 +1,4 @@
+#define print(x) pushw $x; call print_msg
 .code16
 
 .text
@@ -13,8 +14,7 @@ _start:
 	movw $0x2000, %sp
 	movw %sp, %bp
 
-	pushw $msg
-	call print_msg
+	print(msg)
 
 	
 	movb $0x41, %ah
@@ -24,19 +24,16 @@ _start:
 	jc without_extentions
 
 with_extentions:  
-	pushw $extentions_msg
-	call print_msg
+	print(extentions_msg)
 	jmp read_sectors
 
 without_extentions:
-	pushw $no_extentions_msg
-	call print_msg
+	print(no_extentions_msg)
 	cli
 	hlt
 
 read_sectors:
-	pushw $reading_msg
-	call print_msg
+	print(reading_msg)
 	
 msg: 
 	.asciz "Welcome to Taurus OS \n\r"
@@ -46,7 +43,7 @@ booting_msg:
 	.asciz "Booting... \n\r"
 	.byte 0
 no_extentions_msg:
-	.asciz "No extentions installed \n\r"
+	.asciz "No extentions installed, sorry :( Taurus have no support for CHS \n\r"
 	.byte 0
 extentions_msg:
 	.asciz "Extentions installed \n\r"
@@ -54,6 +51,15 @@ extentions_msg:
 reading_msg:
 	.asciz "Reading sectors...\n\r"
 	.byte 0
+
+disk_address_packet_structure:
+	.byte 0x10 //Size of DAP
+	.byte 0x0  //Must be zero
+	.byte 0x0  //Last byte of number of sector to read (remember that x86 is little endian)
+	.byte 0x1  //First byte of number of sectors to read
+
+
+
 
 print_msg:
 	pushw %bp 

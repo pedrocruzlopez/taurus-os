@@ -7,13 +7,14 @@
 
 _start:
 
-	movw $0x1000, %ax 
+	movw $SETUP_BUFFER_SEG, %ax 
 	movw %ax, %ds
 	movw %ax, %ss
 
 	
 	movw $msg, %si
 	jmp print_char
+	halt_cpu()
 
 print_char:
 	

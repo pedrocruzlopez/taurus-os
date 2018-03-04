@@ -15,7 +15,10 @@ SECTIONS
 		*(.text)
 
 	}
+	.data : {
+		*(.data)
+	}
 	
-	
+	_end_setup = .;
 
 }

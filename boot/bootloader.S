@@ -1,7 +1,5 @@
 #include "boot.h"
 
-#define print(x) pushw $x; call print_msg
-
 #define BOOT_STACK 0x2000
 
 

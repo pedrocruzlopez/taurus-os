@@ -1,7 +1,9 @@
 #!/bin/bash
 
 gcc -c bootloader.S
+gcc -c setup.S
 ld -T boot.ld
+ld -T setup.ld
 dd if=/dev/zero of=floppy.img bs=1024 count=1440
 dd if=bootloader.bin of=floppy.img seek=0 count=1 conv=notrunc
 dd if=setup.bin of=floppy.img seek=1 count=1 conv=notrunc

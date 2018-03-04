@@ -55,6 +55,7 @@ error_reading_sectors:
 
 setup_jmp:
 	print(setup_jump_msg)
+	ljmp $SETUP_BUFFER_SEG, $0x0
 	
 msg: 
 	.asciz "Welcome to Taurus OS \n\r"

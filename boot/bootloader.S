@@ -1,9 +1,9 @@
+#include "boot.h"
+
 #define print(x) pushw $x; call print_msg
 
-#define halt_cpu() cli; hlt 
-
 #define BOOT_STACK 0x2000
-#define SETUP_BUFFER_SEG 0x1000
+
 
 .code16
 

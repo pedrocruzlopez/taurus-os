@@ -1,3 +1,5 @@
+#include "boot.h"
+
 .code16
 
 .text
